@@ -33,7 +33,7 @@
           <div class="flex flex-col items-center justify-center min-h-screen mx-auto max-w-xs">
             <h1 class="text-3xl font-semibold">Write Your Task</h1>
             <input class="shadow mx-auto mt-4 appearance-none border rounded py-2 px-3 text-gray-700 leading-tight border-gray-500 focus:outline-none focus:shadow-outline w-full" type="text" v-model="task" placeholder="Type Task">
-            <button class="shadow w-full mt-4 bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded" @click="AddTask">
+            <button class="shadow w-full mt-4 bg-green-600 hover:bg-green-500 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded" @click="AddTask">
             Add
           </button>
         </div>
