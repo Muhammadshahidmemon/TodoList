@@ -1,6 +1,5 @@
 <template>
   <div>
-    <notification-wrapper />
     <Modal
       title="Are you sure to delete this task"
       v-model="modalStates.deleteTask"
@@ -10,12 +9,11 @@
       primaryButtonText="Delete"
       cancelButtonText="Cancel"
     />
-    <div class="w-full md:min-h-screen bg-gray-100">
+    <div class="w-full md:min-h-screen">
       <div class="md:container md:mx-auto py-6 px-4 md:p-10">
         <div class="flex mb-6">
           <div class="w-1/12">
           <div class="mt-3">
-            <!-- <ProgressRing :percentage="percentage" /> -->
           </div>
           </div>
           <div class="w-10/12">
@@ -34,21 +32,32 @@
               class="form-checkbox cursor-pointer border-gray-500 h-4 w-4 text-green-600 transition duration-150 ease-in-out"
             />
           </div>
-          <div class="w-10/12">
-          <RoughNotation
-            :is-show="row.isCompleted"
-            type="strike-through"
-          >
-            <h2 class="text-base text-gray-800 font-semibold">{{ row.name }}</h2>
+          <div class="w-9/12">
+          <h2 class="text-base text-gray-800 font-semibold">
+            <RoughNotation
+              :is-show="row.isCompleted"
+              type="strike-through"
+            >
+              <span class="md:pl-4 pl-1 pr-4 md:pr-24">{{row.name}}</span>
           </RoughNotation>
+          </h2>
           </div>
-          <div class="w-1/12">
+          <div class="w-2/12" v-if="row.hover">
             <button
-            v-if="row.hover"
+            
+                type="button"
+                @click="uncompleteTask(key)"
+                class="text-sm w-4 leading-5 focus:outline-none font-medium text-gray-500 hover:text-gray-400 active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150 mr-2"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" >
+                  <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/>
+                </svg>
+              </button>
+              <button
                 type="button"
                 aria-label="Deletar"
                 @click="modalStates.deleteTask = true;deleteTaskId = key;isCompletedDeleteTask = row.isCompleted"
-                class="-ml-px relative inline-flex items-center pl-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm leading-5 font-medium text-gray-500 hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150"
+                class="text-sm leading-5 focus:outline-none font-medium text-gray-500 hover:text-gray-400 active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150"
               >
                 <svg
                   viewBox="0 0 20 20"
@@ -64,7 +73,7 @@
             >
           </div>
         </div>
-        <button @click="slideoverStates.view = true" class="p-2 md:mr-16 float-right mt-6 text-center focus:outline-none hover:bg-green-500 bg-green-600 rounded">
+        <button @click="slideoverStates.view = true" class="p-2 md:mr-16 float-right mt-6 text-center focus:outline-none hover:bg-green-500 bg-green-600 rounded absolute bottom-0 right-0 mb-8 mr-8">
           <svg class="w-6 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"/>
           </svg> 
@@ -76,11 +85,7 @@
 </template>
 
 <script>
-import ProgressRing from '@/components/ProgressRing' 
 export default {
-  components: {
-    ProgressRing
-  },
   data() {
     return {
       // percentage: 0,
@@ -99,28 +104,24 @@ export default {
     }
   },
   methods: {
+    uncompleteTask(key) {
+      if (this.taskList[key].isCompleted == true) {
+        this.taskList[key].isCompleted = false
+        this.completedTask -= 1 
+      }
+    },
     onDeleteTask() {
       this.modalStates.deleteTask = false
       if (this.isCompletedDeleteTask) {
         this.completedTask -= 1
       }
       this.taskList.splice(this.deleteTaskId, 1)
-      this.$notification({
-        text: 'Task Deleted',
-        color: 'red',
-      });
       this.deleteTaskId = null
-      // this.percentage = (this.taskList.length / this.completedTask) * 100
     },
     AddTask(task) {
       console.log(task);
       this.taskList.push({name: task, isCompleted: false, hover: false})
       this.slideoverStates.view = false
-      this.$notification({
-        text: 'Task Added',
-        color: 'green',
-      });
-      // this.percentage = (this.taskList.length / this.completedTask) * 100
     }
   }
 }
